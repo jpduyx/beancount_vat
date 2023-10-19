@@ -11,15 +11,17 @@ A beancount plugin to calculate the amount of recoverable VAT on purchases based
 
 `#vat` plugin uses tag syntax to add info to the transaction:
 
-Usecase: transaction includes a vat percentage (for example 21%)
+Usecase: calculate Recoverable VAT based on amount including vat
 ================================================================
-> TL;DR: use `#vat-21` tag.
 
-This share tag splits the transaction into 2 transactions. 
+
+Add a `#vat-21` tag to calculate the recoverable vat for this transaction based on the amount including 21% 
+VAT to splits initial the transaction into 2 transactions: 
 One for the recoverable () 21% value added tax, one for the Nett price of the transaction.
 (if the total amount including 21% vat is 242 EURO, then the base amount excluding VAT was 200 EURO and the Value added tax (VAT) is 200*21% = 42 EURO. 
-VAT = VALUE INCLUDED VAT * (VAT % / 100+VAT%) 
-VAT = 242 (21/121) = 42
+
+ - VAT = VALUE INCLUDED VAT * (VAT % / 100+VAT%) 
+ - VAT = 242 (21/121) = 42
 
 
 How to use
@@ -41,14 +43,17 @@ The transaction will get transformed into 2 transactions.
 
 ```
 2020-01-01 * "Office Equipment" "Buy office equipment" #vat-21
-    Assets:Bank               - 242.00 EUR
-    Expenses:Office:Equipment   200.00 EUR
-    Assets:RecoverableVat        42.00 EUR ; 200*21% Value added tax = 42 EUR
+    Assets:Bank                        - 242.00 EUR
+    Expenses:Office:Equipment            200.00 EUR
+    Assets:Debitors:RecoverableVat        42.00 EUR ; 200*21% Value added tax = 42 EUR
 ```
 
 
+And then of course recover the paid VAT
+-----------------------------------------------------------------------
 
-
+Use the calculated `Assets:Debitors:RecoverableVat` from the report over a 
+certain tax period.
 
 
 
